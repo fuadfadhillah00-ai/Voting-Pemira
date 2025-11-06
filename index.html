@@ -1,108 +1,129 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Voting Ketua PEMIRA</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voting PEMIRA FEB UNRI 2025</title>
   <style>
     body {
-      font-family: "Poppins", sans-serif;
-      background: #f8f9fa;
-      margin: 0;
-      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0055a5, #00b4d8);
+      color: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      margin: 0;
+      padding: 20px;
     }
 
     .container {
-      background: white;
-      padding: 2rem;
-      border-radius: 15px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      width: 90%;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 30px;
+      width: 100%;
       max-width: 400px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
 
-    h2 {
+    h1 {
       text-align: center;
-      margin-bottom: 1rem;
-      color: #333;
+      margin-bottom: 25px;
+      font-size: 1.5rem;
+      color: #fff;
     }
 
     label {
       display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-      color: #444;
+      margin: 10px 0 5px;
+      font-weight: 600;
     }
 
     input[type="text"] {
       width: 100%;
-      padding: 0.6rem;
+      padding: 10px;
+      border: none;
       border-radius: 8px;
-      border: 1px solid #ccc;
-      margin-bottom: 1rem;
-      font-size: 15px;
+      outline: none;
+      margin-bottom: 15px;
+      font-size: 0.95rem;
     }
 
-    .kandidat {
-      margin-bottom: 1rem;
+    .kandidat-list {
+      margin: 10px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
-    .kandidat label {
+    .kandidat-item {
+      background: rgba(255,255,255,0.15);
+      padding: 10px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
-      margin-bottom: 0.5rem;
+      gap: 10px;
       cursor: pointer;
+      transition: background 0.2s;
     }
 
-    .kandidat input[type="radio"] {
-      margin-right: 8px;
+    .kandidat-item:hover {
+      background: rgba(255,255,255,0.3);
     }
 
     button {
       width: 100%;
-      background: #007bff;
-      color: white;
+      background: #00b4d8;
+      color: #fff;
       border: none;
-      padding: 0.7rem;
+      padding: 12px;
       border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
       cursor: pointer;
-      font-size: 16px;
-      transition: background 0.2s ease;
+      transition: background 0.2s;
+      margin-top: 10px;
     }
 
     button:hover {
-      background: #0069d9;
+      background: #0096c7;
     }
 
     #status {
+      margin-top: 15px;
       text-align: center;
-      margin-top: 1rem;
       font-weight: 500;
+      color: #fff;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Voting Ketua PEMIRA</h2>
+    <h1>🗳️ Voting Ketua PEMIRA FEB UNRI 2025</h1>
     <form id="voteForm">
-      <label for="nim">Nomor Induk Mahasiswa</label>
-      <input type="text" id="nim" placeholder="Masukkan NIM" required />
+      <label for="nim">Nomor Induk Mahasiswa (NIM)</label>
+      <input type="text" id="nim" name="nim" placeholder="Masukkan NIM Anda" required>
 
       <label for="nama">Nama Lengkap</label>
-      <input type="text" id="nama" placeholder="Masukkan nama" required />
+      <input type="text" id="nama" name="nama" placeholder="Masukkan Nama Anda" required>
 
-      <div class="kandidat">
-        <label><input type="radio" name="kandidat" value="Kandidat 1" required /> Kandidat 1 - Andi Saputra</label>
-        <label><input type="radio" name="kandidat" value="Kandidat 2" /> Kandidat 2 - Budi Santoso</label>
+      <label>Pilih Kandidat</label>
+      <div class="kandidat-list">
+        <label class="kandidat-item">
+          <input type="radio" name="kandidat" value="Kandidat 1"> Kandidat 1 - Andi Saputra
+        </label>
+        <label class="kandidat-item">
+          <input type="radio" name="kandidat" value="Kandidat 2"> Kandidat 2 - Budi Rahman
+        </label>
+        <label class="kandidat-item">
+          <input type="radio" name="kandidat" value="Kandidat 3"> Kandidat 3 - Citra Lestari
+        </label>
       </div>
 
       <button type="submit">Kirim Suara</button>
+      <p id="status"></p>
     </form>
-    <p id="status"></p>
   </div>
 
   <script>
@@ -110,8 +131,8 @@
     const statusText = document.getElementById('status');
     const voteButton = form.querySelector('button[type="submit"]');
 
-    // Ganti URL berikut dengan URL Web App Google Apps Script kamu (akhiran /exec)
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwNotszCYQNFddPosufZHmcs8ET0W-m-mR0pgHWzSQyqf4SQ5mDTIIXMVyIXWKgbRXSEA/exec';
+    // 🔗 GANTI dengan URL Web App kamu (akhiran /exec)
+    const API_URL = 'https://script.google.com/macros/s/PASTE_URL_EXEC_DI_SINI/exec';
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -121,31 +142,32 @@
       const kandidat = document.querySelector('input[name="kandidat"]:checked')?.value;
 
       if (!nim || !nama || !kandidat) {
-        statusText.textContent = 'Mohon isi semua kolom.';
+        statusText.textContent = '⚠️ Mohon isi semua kolom dan pilih kandidat.';
         return;
       }
 
       voteButton.disabled = true;
-      statusText.textContent = 'Mengirim suara...';
-
-      const formData = new FormData();
-      formData.append('nim', nim);
-      formData.append('nama', nama);
-      formData.append('kandidat', kandidat);
+      statusText.textContent = '⏳ Mengirim suara...';
 
       try {
-        await fetch(API_URL, {
+        const response = await fetch(API_URL, {
           method: 'POST',
-          mode: 'no-cors',
-          body: formData
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({ nim, nama, kandidat })
         });
 
-        statusText.textContent = 'Vote berhasil dikirim! ✅';
-        form.reset();
+        const result = await response.json();
 
-        setTimeout(() => voteButton.disabled = false, 5000);
+        if (result.status === 'success') {
+          statusText.textContent = '✅ ' + result.message;
+          form.reset();
+        } else {
+          statusText.textContent = '⚠️ ' + result.message;
+        }
       } catch (err) {
-        statusText.textContent = 'Terjadi kesalahan jaringan.';
+        console.error(err);
+        statusText.textContent = '❌ Terjadi kesalahan jaringan.';
+      } finally {
         voteButton.disabled = false;
       }
     });
