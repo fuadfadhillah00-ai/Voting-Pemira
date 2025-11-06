@@ -1,26 +1,154 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Voting Ketua</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voting Ketua PEMIRA</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #444;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 0.6rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 1rem;
+      font-size: 15px;
+    }
+
+    .kandidat {
+      margin-bottom: 1rem;
+    }
+
+    .kandidat label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+    }
+
+    .kandidat input[type="radio"] {
+      margin-right: 8px;
+    }
+
+    button {
+      width: 100%;
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 0.7rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.2s ease;
+    }
+
+    button:hover {
+      background: #0069d9;
+    }
+
+    #status {
+      text-align: center;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+  </style>
 </head>
 <body>
-  <h1>Pemilihan Ketua 2025</h1>
+  <div class="container">
+    <h2>Voting Ketua PEMIRA</h2>
+    <form id="voteForm">
+      <label for="nim">Nomor Induk Mahasiswa</label>
+      <input type="text" id="nim" placeholder="Masukkan NIM" required />
 
-  <form id="voteForm">
-    <input type="text" id="nim" placeholder="Nomor Induk Mahasiswa" required><br>
-    <input type="text" id="nama" placeholder="Nama Lengkap" required><br>
+      <label for="nama">Nama Lengkap</label>
+      <input type="text" id="nama" placeholder="Masukkan nama" required />
 
-    <label><input type="radio" name="kandidat" value="Kandidat A" required> Kandidat A</label><br>
-    <label><input type="radio" name="kandidat" value="Kandidat B"> Kandidat B</label><br>
+      <div class="kandidat">
+        <label><input type="radio" name="kandidat" value="Kandidat 1" required /> Kandidat 1 - Andi Saputra</label>
+        <label><input type="radio" name="kandidat" value="Kandidat 2" /> Kandidat 2 - Budi Santoso</label>
+      </div>
 
-    <button type="submit">Vote</button>
-  </form>
+      <button type="submit">Kirim Suara</button>
+    </form>
+    <p id="status"></p>
+  </div>
 
-  <p id="status"></p>
+  <script>
+    const form = document.getElementById('voteForm');
+    const statusText = document.getElementById('status');
+    const voteButton = form.querySelector('button[type="submit"]');
 
-  <script src="script.js"></script>
+    // Ganti URL berikut dengan URL Web App Google Apps Script kamu (akhiran /exec)
+    const API_URL = 'https://script.google.com/macros/s/AKfycbwNotszCYQNFddPosufZHmcs8ET0W-m-mR0pgHWzSQyqf4SQ5mDTIIXMVyIXWKgbRXSEA/exec';
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const nim = document.getElementById('nim').value.trim();
+      const nama = document.getElementById('nama').value.trim();
+      const kandidat = document.querySelector('input[name="kandidat"]:checked')?.value;
+
+      if (!nim || !nama || !kandidat) {
+        statusText.textContent = 'Mohon isi semua kolom.';
+        return;
+      }
+
+      voteButton.disabled = true;
+      statusText.textContent = 'Mengirim suara...';
+
+      const formData = new FormData();
+      formData.append('nim', nim);
+      formData.append('nama', nama);
+      formData.append('kandidat', kandidat);
+
+      try {
+        await fetch(API_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: formData
+        });
+
+        statusText.textContent = 'Vote berhasil dikirim! ✅';
+        form.reset();
+
+        setTimeout(() => voteButton.disabled = false, 5000);
+      } catch (err) {
+        statusText.textContent = 'Terjadi kesalahan jaringan.';
+        voteButton.disabled = false;
+      }
+    });
+  </script>
 </body>
 </html>
