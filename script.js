@@ -2,7 +2,7 @@ const form = document.getElementById('voteForm');
 const statusText = document.getElementById('status');
 
 // Ganti dengan URL Web App kamu
-const API_URL = 'https://script.google.com/macros/s/AKfycbxq1H5dFIKw4UZAsW4OSN-XSPwJlbAFVOmDOx1J-j9YcEUB0gmuJJzqMTZIoLCMVbR3PA/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxy3LF7ax1sz4E20iZQFmklDZdSY95Y9aX6rmfdH11YZweSk7xVRxDgeTNxRWNps-5rQw/exec';
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -19,11 +19,20 @@ form.addEventListener('submit', async (e) => {
   statusText.textContent = 'Mengirim suara...';
 
   try {
+    const formData = new FormData();
+    formData.append('nim', nim);
+    formData.append('nama', nama);
+    formData.append('kandidat', kandidat);
+
     const res = await fetch(API_URL, {
       method: 'POST',
-      body: JSON.stringify({ nim, nama, kandidat }),
-      headers: { 'Content-Type': 'application/json' }
+      mode: 'no-cors',
+      body: formData
     });
+
+    statusText.textContent = 'Vote berhasil dikirim! ✅';
+    form.reset();
+
 
     const data = await res.json();
 
