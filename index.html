@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voting Ketua</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Pemilihan Ketua 2025</h1>
+
+  <form id="voteForm">
+    <input type="text" id="nim" placeholder="Nomor Induk Mahasiswa" required><br>
+    <input type="text" id="nama" placeholder="Nama Lengkap" required><br>
+
+    <label><input type="radio" name="kandidat" value="Kandidat A" required> Kandidat A</label><br>
+    <label><input type="radio" name="kandidat" value="Kandidat B"> Kandidat B</label><br>
+
+    <button type="submit">Vote</button>
+  </form>
+
+  <p id="status"></p>
+
+  <script src="script.js"></script>
+</body>
+</html>
