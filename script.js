@@ -2,7 +2,7 @@ const form = document.getElementById('voteForm');
 const statusText = document.getElementById('status');
 
 // Ganti dengan URL Web App kamu
-const API_URL = 'https://script.google.com/macros/s/AKfycbzJhiTifY79oX0G-zNyhtY9ayQy4zeDmhjXd_-7I6TQRJ0NQMbLmiZxgLBGcWPZgAeSsA/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxq1H5dFIKw4UZAsW4OSN-XSPwJlbAFVOmDOx1J-j9YcEUB0gmuJJzqMTZIoLCMVbR3PA/exec';
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
