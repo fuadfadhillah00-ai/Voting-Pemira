@@ -14,6 +14,7 @@
       --success: #00c853;
       --success-dark: #009640;
       --error: #ff5252;
+      --warning: #ff9800;
       --card-bg: rgba(255, 255, 255, 0.08);
     }
 
@@ -134,6 +135,14 @@
       font-weight: 500;
     }
 
+    .warning {
+      color: var(--warning);
+      font-size: 15px;
+      margin-top: 14px;
+      min-height: 24px;
+      font-weight: 500;
+    }
+
     .success {
       color: var(--success);
       font-size: 18px;
@@ -221,20 +230,7 @@
 </head>
 <body>
   <div class="card" id="mainCard">
-    <h1>🗳️ PEMIRA FEB UNRI 2025</h1>
-    <h2>Verifikasi Identitas Pemilih</h2>
-    <p>Masukkan NIM dan nama sesuai data KRS.</p>
-    
-    <form id="verifyForm">
-      <input type="text" id="nim" placeholder="NIM (10 digit)" required autocomplete="off">
-      <input type="text" id="nama" placeholder="Nama Lengkap" required autocomplete="name">
-      <button type="submit" id="verifyBtn">Verifikasi</button>
-      <div class="error" id="errorVerify"></div>
-    </form>
-    
-    <div class="footer">
-      Data diverifikasi dengan database resmi FEB UNRI.
-    </div>
+    <!-- Diisi oleh JS -->
   </div>
 
   <!-- Modal Konfirmasi -->
@@ -257,9 +253,15 @@
     // ✅ GANTI DENGAN WEB APP URL-MU
     const BACKEND_URL = "https://script.google.com/macros/s/AKfycbxY92cAYx9b2WVtuncpM9ZxHpodapV6uUUySgRwMsN2cO7kVhCkbN1ERgE9_9Y7j7icRA/exec";
 
-    // Cek localStorage
+    // State halaman saat ini
+    let currentPage = "verify";
+
+    // Cek localStorage saat load
     if (localStorage.getItem("voted_feb_unri_2025") === "true") {
+      currentPage = "thankyou";
       renderThankYou();
+    } else {
+      renderVerification();
     }
 
     // Modal handler
@@ -292,6 +294,7 @@
 
     // Render halaman verifikasi
     const renderVerification = () => {
+      currentPage = "verify";
       document.getElementById("mainCard").innerHTML = `
         <h1>🗳️ PEMIRA FEB UNRI 2025</h1>
         <h2>Verifikasi Identitas Pemilih</h2>
@@ -316,6 +319,7 @@
         const btn = document.getElementById("verifyBtn");
         const errorDiv = document.getElementById("errorVerify");
         errorDiv.textContent = "";
+        errorDiv.className = "error";
 
         if (!nim || !nama) {
           errorDiv.textContent = "⚠️ NIM dan nama wajib diisi.";
@@ -348,18 +352,27 @@
           } else {
             btn.disabled = false;
             btn.textContent = "Verifikasi";
-            errorDiv.textContent = "❌ " + (result.error || "Akses ditolak.");
+            // ✅ Pesan error lebih jelas
+            errorDiv.className = result.error === "SUDAH_VOTE" ? "warning" : "error";
+            errorDiv.innerHTML = `
+              <strong>${result.error === "SUDAH_VOTE" ? "⚠️" : "❌"}</strong> ${result.message}
+              <br><small style="display:block; margin-top:6px; font-weight:400;">
+                Hubungi panitia jika terjadi kesalahan: wa.me/628123456789
+              </small>
+            `;
+            // ✅ Tetap di halaman verifikasi — tidak reset form
           }
         } catch (err) {
           btn.disabled = false;
           btn.textContent = "Verifikasi";
-          errorDiv.textContent = "⚠️ Gagal koneksi: Coba lagi.";
+          errorDiv.textContent = "⚠️ Gagal koneksi: Periksa jaringan Anda.";
         }
       });
     };
 
     // Render halaman voting
     const renderVoting = (nim, nama) => {
+      currentPage = "voting";
       document.getElementById("mainCard").innerHTML = `
         <h1>✅ Verifikasi Berhasil</h1>
         <h2>${nama}</h2>
@@ -414,15 +427,20 @@
 
             if (result.status === "OK") {
               localStorage.setItem("voted_feb_unri_2025", "true");
+              currentPage = "thankyou";
               renderThankYou();
-            } else if (result.error === "NOT_ELIGIBLE") {
-              btn.disabled = false;
-              btn.textContent = "Kirim Suara";
-              errorDiv.textContent = "❌ Anda sudah pernah voting atau data tidak valid.";
+              // ✅ Tidak kembali ke form — tetap di halaman terima kasih
             } else {
               btn.disabled = false;
               btn.textContent = "Kirim Suara";
-              errorDiv.textContent = "⚠️ Error: " + (result.error || "Tidak diketahui");
+              errorDiv.className = result.error === "SUDAH_VOTE" ? "warning" : "error";
+              errorDiv.innerHTML = `
+                <strong>${result.error === "SUDAH_VOTE" ? "⚠️" : "❌"}</strong> ${result.message}
+                <br><small style="display:block; margin-top:6px; font-weight:400;">
+                  Hubungi panitia jika terjadi kesalahan: wa.me/628123456789
+                </small>
+              `;
+              // ✅ Tetap di halaman voting — tidak kembali ke verifikasi
             }
           } catch (err) {
             btn.disabled = false;
@@ -433,8 +451,9 @@
       });
     };
 
-    // Render halaman terima kasih
+    // Render halaman terima kasih (PERMANEN)
     const renderThankYou = () => {
+      currentPage = "thankyou";
       document.getElementById("mainCard").innerHTML = `
         <div class="success-icon">✅</div>
         <div class="success">Suara Anda Telah Terdaftar</div>
@@ -446,9 +465,16 @@
       `;
     };
 
-    // Inisialisasi
-    if (localStorage.getItem("voted_feb_unri_2025") !== "true") {
-      renderVerification();
+    // ✅ Cegah kembali ke halaman sebelumnya via tombol browser
+    window.addEventListener('popstate', function(e) {
+      if (currentPage === "thankyou") {
+        history.pushState(null, null, location.href);
+      }
+    });
+
+    // ✅ Blokir refresh di halaman terima kasih
+    if (currentPage === "thankyou") {
+      history.pushState(null, null, location.href);
     }
   </script>
 </body>
