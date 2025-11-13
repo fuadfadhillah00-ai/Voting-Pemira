@@ -238,7 +238,7 @@
     <div class="modal-content">
       <h3>🗳️ Konfirmasi Pilihan</h3>
       <p>Anda memilih:</p>
-      <p id="confirmKandidat" style="font-weight: bold; font-size: 18px; color: #0d47a1;">Kandidat X</p>
+      <p id="confirmKandidat" style="font-weight: 600; font-size: 18px; color: #0d47a1;">Kandidat X</p>
       <p style="margin-top: 16px; font-size: 14px; color: #777;">
         Suara tidak dapat diubah setelah dikirim.
       </p>
@@ -250,22 +250,15 @@
   </div>
 
   <script>
-    // ✅ GANTI DENGAN WEB APP URL-MU
+    // ✅ URL Web App yang kamu berikan — langsung dipakai
     const BACKEND_URL = "https://script.google.com/macros/s/AKfycbxY92cAYx9b2WVtuncpM9ZxHpodapV6uUUySgRwMsN2cO7kVhCkbN1ERgE9_9Y7j7icRA/exec";
 
-    // State halaman saat ini
     let currentPage = "verify";
 
-    // Cek localStorage saat load
-    if (localStorage.getItem("voted_feb_unri_2025") === "true") {
-      currentPage = "thankyou";
-      renderThankYou();
-    } else {
-      renderVerification();
-    }
+    // ——— ✅ SEMUA FUNGSI PAKAI function declaration ———
+    // ——— ini memastikan hoisting berjalan benar ———
 
-    // Modal handler
-    const showModal = (kandidat, onConfirm) => {
+    function showModal(kandidat, onConfirm) {
       document.getElementById("confirmKandidat").textContent = kandidat;
       const modal = document.getElementById("confirmModal");
       modal.style.display = "flex";
@@ -290,10 +283,9 @@
       modal.onclick = (e) => {
         if (e.target === modal) cleanup();
       };
-    };
+    }
 
-    // Render halaman verifikasi
-    const renderVerification = () => {
+    function renderVerification() {
       currentPage = "verify";
       document.getElementById("mainCard").innerHTML = `
         <h1>🗳️ PEMIRA FEB UNRI 2025</h1>
@@ -352,7 +344,6 @@
           } else {
             btn.disabled = false;
             btn.textContent = "Verifikasi";
-            // ✅ Pesan error lebih jelas
             errorDiv.className = result.error === "SUDAH_VOTE" ? "warning" : "error";
             errorDiv.innerHTML = `
               <strong>${result.error === "SUDAH_VOTE" ? "⚠️" : "❌"}</strong> ${result.message}
@@ -360,7 +351,6 @@
                 Hubungi panitia jika terjadi kesalahan: wa.me/628123456789
               </small>
             `;
-            // ✅ Tetap di halaman verifikasi — tidak reset form
           }
         } catch (err) {
           btn.disabled = false;
@@ -368,10 +358,9 @@
           errorDiv.textContent = "⚠️ Gagal koneksi: Periksa jaringan Anda.";
         }
       });
-    };
+    }
 
-    // Render halaman voting
-    const renderVoting = (nim, nama) => {
+    function renderVoting(nim, nama) {
       currentPage = "voting";
       document.getElementById("mainCard").innerHTML = `
         <h1>✅ Verifikasi Berhasil</h1>
@@ -427,9 +416,7 @@
 
             if (result.status === "OK") {
               localStorage.setItem("voted_feb_unri_2025", "true");
-              currentPage = "thankyou";
               renderThankYou();
-              // ✅ Tidak kembali ke form — tetap di halaman terima kasih
             } else {
               btn.disabled = false;
               btn.textContent = "Kirim Suara";
@@ -440,7 +427,6 @@
                   Hubungi panitia jika terjadi kesalahan: wa.me/628123456789
                 </small>
               `;
-              // ✅ Tetap di halaman voting — tidak kembali ke verifikasi
             }
           } catch (err) {
             btn.disabled = false;
@@ -449,10 +435,9 @@
           }
         });
       });
-    };
+    }
 
-    // Render halaman terima kasih (PERMANEN)
-    const renderThankYou = () => {
+    function renderThankYou() {
       currentPage = "thankyou";
       document.getElementById("mainCard").innerHTML = `
         <div class="success-icon">✅</div>
@@ -463,16 +448,25 @@
           Data voting tersimpan secara aman dan transparan.
         </div>
       `;
-    };
+    }
 
-    // ✅ Cegah kembali ke halaman sebelumnya via tombol browser
-    window.addEventListener('popstate', function(e) {
+    // ——— INISIALISASI ———
+    // Jalankan setelah semua fungsi didefinisikan
+
+    // Cek localStorage saat load
+    if (localStorage.getItem("voted_feb_unri_2025") === "true") {
+      renderThankYou();
+    } else {
+      renderVerification();
+    }
+
+    // Cegah navigasi kembali ke halaman voting/thankyou via tombol browser
+    window.addEventListener('popstate', function() {
       if (currentPage === "thankyou") {
         history.pushState(null, null, location.href);
       }
     });
 
-    // ✅ Blokir refresh di halaman terima kasih
     if (currentPage === "thankyou") {
       history.pushState(null, null, location.href);
     }
