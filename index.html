@@ -415,7 +415,7 @@
             const result = await response.json();
 
             if (result.status === "OK") {
-              localStorage.setItem("voted_feb_unri_2025", "true");
+              localStorage.setItem("voted_feb_unri_2025v1", "true");
               renderThankYou();
             } else {
               btn.disabled = false;
@@ -454,7 +454,7 @@
     // Jalankan setelah semua fungsi didefinisikan
 
     // Cek localStorage saat load
-    if (localStorage.getItem("voted_feb_unri_2025") === "true") {
+    if (localStorage.getItem("voted_feb_unri_2025v1") === "true") {
       renderThankYou();
     } else {
       renderVerification();
