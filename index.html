@@ -44,7 +44,7 @@
       border-radius: 22px;
       box-shadow: 0 12px 36px rgba(0,0,0,0.28), 0 4px 12px rgba(0,0,0,0.18);
       width: 100%;
-      max-width: 540px;
+      max-width: 560px;
       text-align: center;
       position: relative;
       overflow: hidden;
@@ -225,20 +225,19 @@
     .candidates {
       margin: 24px 0;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 20px;
     }
 
     .candidate-card {
       background: var(--candidate-bg);
       border-radius: 16px;
-      padding: 16px 12px;
+      overflow: hidden;
       cursor: pointer;
       transition: all 0.3s;
+      border: 3px solid transparent;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      border: 2px solid transparent;
     }
 
     .candidate-card:hover {
@@ -249,51 +248,50 @@
     .candidate-card.selected {
       border-color: var(--success);
       background: rgba(0, 200, 83, 0.15);
+      box-shadow: 0 6px 16px rgba(0, 200, 83, 0.25);
     }
 
     .candidate-photo {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
+      width: 100%;
+      height: 140px;
       object-fit: cover;
-      margin-bottom: 12px;
-      background: #fff;
-      border: 2px solid rgba(255,255,255,0.3);
+      display: block;
+      background: #ddd;
+    }
+
+    .candidate-info {
+      padding: 14px 10px 12px;
     }
 
     .candidate-number {
-      font-size: 14px;
-      font-weight: 600;
+      font-size: 16px;
+      font-weight: 700;
       color: #ffd700;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
 
     .candidate-name {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
       line-height: 1.4;
-    }
-
-    .candidate-sub {
-      font-size: 13px;
-      color: rgba(255,255,255,0.85);
-      font-weight: 500;
+      word-break: break-word;
     }
 
     .loading-candidates {
       grid-column: 1 / -1;
-      padding: 20px;
+      padding: 24px;
       color: rgba(255,255,255,0.7);
+      font-size: 16px;
     }
 
     @media (max-width: 480px) {
-      .card { padding: 26px 20px; }
+      .card { padding: 26px 18px; }
       h1 { font-size: 26px; }
       h2 { font-size: 22px; }
       input, button { padding: 12px; }
-      .candidate-photo { width: 70px; height: 70px; }
-      .candidate-name { font-size: 13px; }
-      .candidate-sub { font-size: 12px; }
+      .candidate-photo { height: 130px; }
+      .candidate-number { font-size: 15px; }
+      .candidate-name { font-size: 14px; }
     }
   </style>
 </head>
@@ -321,7 +319,6 @@
     const BACKEND_URL = "https://script.google.com/macros/s/AKfycbxY92cAYx9b2WVtuncpM9ZxHpodapV6uUUySgRwMsN2cO7kVhCkbN1ERgE9_9Y7j7icRA/exec";
     let currentPage = "verify";
 
-    // ——— FUNGSI UTAMA ———
     function showModal(kandidat, onConfirm) {
       document.getElementById("confirmKandidat").textContent = kandidat;
       const modal = document.getElementById("confirmModal");
@@ -364,9 +361,7 @@
         }
       } catch (err) {
         console.error("fetchCandidates error:", err);
-        return [
-          { id: "1", cagub: "Contoh", cawagub: "Kandidat", foto: "https://via.placeholder.com/150/e0e0e0/666666?text=No+Data" }
-        ];
+        return [];
       }
     }
 
@@ -466,21 +461,26 @@
       const grid = document.getElementById("candidateGrid");
       
       if (candidates.length === 0) {
-        grid.innerHTML = `<div class="no-candidate">Belum ada kandidat terdaftar.</div>`;
+        grid.innerHTML = `<div class="loading-candidates">Belum ada kandidat terdaftar.</div>`;
         return;
       }
 
-      grid.innerHTML = candidates.map(c => `
-        <div class="candidate-card" data-id="${c.id}" data-name="${c.cagub} & ${c.cawagub}">
-          <img src="${c.foto}" alt="Kandidat ${c.id}" class="candidate-photo" onerror="this.src='https://via.placeholder.com/150/e0e0e0/666666?text=No+Photo'">
-          <div class="candidate-number">Nomor ${c.id}</div>
-          <div class="candidate-name">${c.cagub}</div>
-          <div class="candidate-sub">${c.cawagub}</div>
-        </div>
-      `).join('');
+      grid.innerHTML = candidates.map(c => {
+        const paslonName = `${c.cagub} - ${c.cawagub}`;
+        return `
+          <div class="candidate-card" data-id="${c.id}" data-paslon="${paslonName}">
+            <img src="${c.foto}" alt="Kandidat ${c.id}" class="candidate-photo" 
+                 onerror="this.parentElement.style.backgroundColor='#333'; this.style.display='none'; this.parentElement.querySelector('.candidate-number').style.color='#aaa';">
+            <div class="candidate-info">
+              <div class="candidate-number">Nomor ${c.id}</div>
+              <div class="candidate-name">${paslonName}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
 
       let selectedId = null;
-      let selectedName = "";
+      let selectedPaslon = "";
 
       const cards = document.querySelectorAll(".candidate-card");
       const voteBtn = document.getElementById("voteBtn");
@@ -491,7 +491,7 @@
           cards.forEach(c => c.classList.remove("selected"));
           card.classList.add("selected");
           selectedId = card.dataset.id;
-          selectedName = card.dataset.name;
+          selectedPaslon = card.dataset.paslon;
           voteBtn.disabled = false;
         });
       });
@@ -502,7 +502,7 @@
           return;
         }
 
-        const displayText = `Nomor ${selectedId} — ${selectedName}`;
+        const displayText = `Nomor ${selectedId} — ${selectedPaslon}`;
         showModal(displayText, async () => {
           voteBtn.disabled = true;
           voteBtn.innerHTML = '<span class="spinner"></span> Mengirim...';
