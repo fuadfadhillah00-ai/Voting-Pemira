@@ -4,173 +4,452 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Voting PEMIRA FEB UNRI 2025</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #0055a5, #00b4d8);
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 20px;
+    :root {
+      --primary: #004ba0;
+      --primary-dark: #003a7d;
+      --success: #00c853;
+      --success-dark: #009640;
+      --error: #ff5252;
+      --card-bg: rgba(255, 255, 255, 0.08);
     }
 
-    .container {
-      background: rgba(255, 255, 255, 0.1);
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Poppins", "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, var(--primary), #0077cc, #3399ff);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 10px;
+    }
+
+    .card {
+      background: var(--card-bg);
       backdrop-filter: blur(10px);
-      border-radius: 16px;
-      padding: 30px;
+      -webkit-backdrop-filter: blur(10px);
+      padding: 32px;
+      border-radius: 22px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.28), 0 4px 12px rgba(0,0,0,0.18);
       width: 100%;
-      max-width: 400px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      max-width: 480px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%; width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      z-index: -1;
     }
 
     h1 {
-      text-align: center;
-      margin-bottom: 25px;
-      font-size: 1.5rem;
-      color: #fff;
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0 0 8px;
+      letter-spacing: -0.8px;
     }
 
-    label {
-      display: block;
-      margin: 10px 0 5px;
+    h2 {
+      font-size: 24px;
       font-weight: 600;
+      margin: 16px 0 24px;
+      color: #e0f0ff;
     }
 
-    input[type="text"] {
+    input, select, button {
       width: 100%;
-      padding: 10px;
+      padding: 14px;
+      margin-top: 16px;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-family: inherit;
+      transition: all 0.25s;
+    }
+
+    input, select {
+      background: rgba(255,255,255,0.96);
+      color: #1a1a1a;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    }
+
+    input:focus, select:focus {
       outline: none;
-      margin-bottom: 15px;
-      font-size: 0.95rem;
-    }
-
-    .kandidat-list {
-      margin: 10px 0;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .kandidat-item {
-      background: rgba(255,255,255,0.15);
-      padding: 10px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .kandidat-item:hover {
-      background: rgba(255,255,255,0.3);
+      box-shadow: 0 0 0 3px rgba(0, 150, 255, 0.4), 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateY(-2px);
     }
 
     button {
-      width: 100%;
-      background: #00b4d8;
-      color: #fff;
-      border: none;
+      background: linear-gradient(135deg, var(--success), var(--success-dark));
+      color: white;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0, 150, 64, 0.35);
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 150, 64, 0.45);
+    }
+
+    button:disabled {
+      opacity: 0.75;
+      cursor: wait;
+      transform: none;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 18px; height: 18px;
+      margin-right: 10px;
+      border: 2px solid transparent;
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .error {
+      color: var(--error);
+      font-size: 15px;
+      margin-top: 14px;
+      min-height: 24px;
+      font-weight: 500;
+    }
+
+    .success {
+      color: var(--success);
+      font-size: 18px;
+      font-weight: 600;
+      margin: 24px 0 16px;
+    }
+
+    .success-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    .footer {
+      margin-top: 28px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      font-weight: 500;
+    }
+
+    /* Modal Konfirmasi */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      color: #333;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 400px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      transform: scale(0.9);
+      opacity: 0;
+      transition: all 0.3s;
+    }
+
+    .modal.show .modal-content {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .modal h3 {
+      color: var(--primary-dark);
+      margin: 0 0 16px;
+      font-size: 20px;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .modal-btn {
+      flex: 1;
       padding: 12px;
-      border-radius: 8px;
-      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
       font-weight: 600;
       cursor: pointer;
-      transition: background 0.2s;
-      margin-top: 10px;
+      font-size: 15px;
     }
 
-    button:hover {
-      background: #0096c7;
-    }
+    .btn-cancel { background: #f5f5f5; color: #666; }
+    .btn-confirm { background: var(--success); color: white; }
+    .btn-cancel:hover { background: #e0e0e0; }
+    .btn-confirm:hover { background: var(--success-dark); }
 
-    #status {
-      margin-top: 15px;
-      text-align: center;
-      font-weight: 500;
-      color: #fff;
+    @media (max-width: 480px) {
+      .card { padding: 26px 22px; }
+      h1 { font-size: 26px; }
+      h2 { font-size: 22px; }
+      input, select, button { padding: 12px; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🗳️ Voting Ketua PEMIRA FEB UNRI 2025</h1>
-    <form id="voteForm">
-      <label for="nim">Nomor Induk Mahasiswa (NIM)</label>
-      <input type="text" id="nim" name="nim" placeholder="Masukkan NIM Anda" required>
-
-      <label for="nama">Nama Lengkap</label>
-      <input type="text" id="nama" name="nama" placeholder="Masukkan Nama Anda" required>
-
-      <label>Pilih Kandidat</label>
-      <div class="kandidat-list">
-        <label class="kandidat-item">
-          <input type="radio" name="kandidat" value="Kandidat 1"> Kandidat 1 - Andi Saputra
-        </label>
-        <label class="kandidat-item">
-          <input type="radio" name="kandidat" value="Kandidat 2"> Kandidat 2 - Budi Rahman
-        </label>
-        <label class="kandidat-item">
-          <input type="radio" name="kandidat" value="Kandidat 3"> Kandidat 3 - Citra Lestari
-        </label>
-      </div>
-
-      <button type="submit">Kirim Suara</button>
-      <p id="status"></p>
+  <div class="card" id="mainCard">
+    <h1>🗳️ PEMIRA FEB UNRI 2025</h1>
+    <h2>Verifikasi Identitas Pemilih</h2>
+    <p>Masukkan NIM dan nama sesuai data KRS.</p>
+    
+    <form id="verifyForm">
+      <input type="text" id="nim" placeholder="NIM (10 digit)" required autocomplete="off">
+      <input type="text" id="nama" placeholder="Nama Lengkap" required autocomplete="name">
+      <button type="submit" id="verifyBtn">Verifikasi</button>
+      <div class="error" id="errorVerify"></div>
     </form>
+    
+    <div class="footer">
+      Data diverifikasi dengan database resmi FEB UNRI.
+    </div>
+  </div>
+
+  <!-- Modal Konfirmasi -->
+  <div class="modal" id="confirmModal">
+    <div class="modal-content">
+      <h3>🗳️ Konfirmasi Pilihan</h3>
+      <p>Anda memilih:</p>
+      <p id="confirmKandidat" style="font-weight: bold; font-size: 18px; color: #0d47a1;">Kandidat X</p>
+      <p style="margin-top: 16px; font-size: 14px; color: #777;">
+        Suara tidak dapat diubah setelah dikirim.
+      </p>
+      <div class="modal-buttons">
+        <button class="modal-btn btn-cancel" id="modalCancel">Batal</button>
+        <button class="modal-btn btn-confirm" id="modalConfirm">Kirim Suara</button>
+      </div>
+    </div>
   </div>
 
   <script>
-    const form = document.getElementById('voteForm');
-    const statusText = document.getElementById('status');
-    const voteButton = form.querySelector('button[type="submit"]');
+    // ✅ GANTI DENGAN WEB APP URL-MU
+    const BACKEND_URL = "https://script.google.com/macros/s/ABC123/exec";
 
-    // 🔗 GANTI dengan URL Web App kamu (akhiran /exec)
-    const API_URL = 'https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLgSezh03RXcAXUQIUKY3uCfyDt8Q1Q8wjwKDXH9FIuMqcKDZfS4wb0PhbMNN_LxW04c-6hB-zjK6-1Od4VTLtxjHOrODJL-SdhKsJTmMta4l-aKxwbQcfkDHj7RXPP61-W17RujtLfPrB-riOz0Iq28ZDdqFOL5lvdNzfybKv6TtFojfsPgZvHPjUqzqrotQtKzPSkx3viRNwXa2Kt0jeBHhXo5ijJ56t1ZK2lU9RgoXpkCLhCvpCF1VpVwzcp2dTyMMiiST0yiTp7gCV49x6MqWo7uQw7x7GteElmK&lib=Mn43H-Ny-iNbItbpJrHSKuFSrHjjihu8d';
+    // Cek localStorage
+    if (localStorage.getItem("voted_feb_unri_2025") === "true") {
+      renderThankYou();
+    }
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    // Modal handler
+    const showModal = (kandidat, onConfirm) => {
+      document.getElementById("confirmKandidat").textContent = kandidat;
+      const modal = document.getElementById("confirmModal");
+      modal.style.display = "flex";
+      setTimeout(() => modal.classList.add("show"), 10);
 
-      const nim = document.getElementById('nim').value.trim();
-      const nama = document.getElementById('nama').value.trim();
-      const kandidat = document.querySelector('input[name="kandidat"]:checked')?.value;
+      const cancelBtn = document.getElementById("modalCancel");
+      const confirmBtn = document.getElementById("modalConfirm");
 
-      if (!nim || !nama || !kandidat) {
-        statusText.textContent = '⚠️ Mohon isi semua kolom dan pilih kandidat.';
-        return;
-      }
+      const cleanup = () => {
+        modal.classList.remove("show");
+        setTimeout(() => modal.style.display = "none", 300);
+        cancelBtn.onclick = null;
+        confirmBtn.onclick = null;
+      };
 
-      voteButton.disabled = true;
-      statusText.textContent = '⏳ Mengirim suara...';
+      cancelBtn.onclick = cleanup;
+      confirmBtn.onclick = () => {
+        cleanup();
+        onConfirm();
+      };
 
-      try {
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams({ nim, nama, kandidat })
-        });
+      modal.onclick = (e) => {
+        if (e.target === modal) cleanup();
+      };
+    };
 
-        const result = await response.json();
+    // Render halaman verifikasi
+    const renderVerification = () => {
+      document.getElementById("mainCard").innerHTML = `
+        <h1>🗳️ PEMIRA FEB UNRI 2025</h1>
+        <h2>Verifikasi Identitas Pemilih</h2>
+        <p>Masukkan NIM dan nama sesuai data KRS.</p>
+        
+        <form id="verifyForm">
+          <input type="text" id="nim" placeholder="NIM (10 digit)" required autocomplete="off">
+          <input type="text" id="nama" placeholder="Nama Lengkap" required autocomplete="name">
+          <button type="submit" id="verifyBtn">Verifikasi</button>
+          <div class="error" id="errorVerify"></div>
+        </form>
+        
+        <div class="footer">
+          Data diverifikasi dengan database resmi FEB UNRI.
+        </div>
+      `;
 
-        if (result.status === 'success') {
-          statusText.textContent = '✅ ' + result.message;
-          form.reset();
-        } else {
-          statusText.textContent = '⚠️ ' + result.message;
+      document.getElementById("verifyForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const nim = document.getElementById("nim").value.trim();
+        const nama = document.getElementById("nama").value.trim();
+        const btn = document.getElementById("verifyBtn");
+        const errorDiv = document.getElementById("errorVerify");
+        errorDiv.textContent = "";
+
+        if (!nim || !nama) {
+          errorDiv.textContent = "⚠️ NIM dan nama wajib diisi.";
+          return;
         }
-      } catch (err) {
-        console.error(err);
-        statusText.textContent = '❌ Terjadi kesalahan jaringan.';
-      } finally {
-        voteButton.disabled = false;
-      }
-    });
+
+        if (!/^\d{10}$/.test(nim)) {
+          errorDiv.textContent = "⚠️ NIM harus 10 digit angka.";
+          return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> Memverifikasi...';
+
+        try {
+          const response = await fetch(BACKEND_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+              action: 'verify',
+              nim: nim,
+              nama: nama
+            })
+          });
+
+          const result = await response.json();
+
+          if (result.valid) {
+            renderVoting(nim, nama);
+          } else {
+            btn.disabled = false;
+            btn.textContent = "Verifikasi";
+            errorDiv.textContent = "❌ " + (result.error || "Akses ditolak.");
+          }
+        } catch (err) {
+          btn.disabled = false;
+          btn.textContent = "Verifikasi";
+          errorDiv.textContent = "⚠️ Gagal koneksi: Coba lagi.";
+        }
+      });
+    };
+
+    // Render halaman voting
+    const renderVoting = (nim, nama) => {
+      document.getElementById("mainCard").innerHTML = `
+        <h1>✅ Verifikasi Berhasil</h1>
+        <h2>${nama}</h2>
+        <p>NIM: <strong>${nim}</strong></p>
+        <p>Silakan pilih kandidat Anda.</p>
+        
+        <form id="voteForm">
+          <select id="kandidat" required>
+            <option value="">Pilih Kandidat</option>
+            <option value="Kandidat 1">Kandidat 1</option>
+            <option value="Kandidat 2">Kandidat 2</option>
+            <option value="Kandidat 3">Kandidat 3</option>
+          </select>
+          <button type="submit" id="voteBtn">Kirim Suara</button>
+          <div class="error" id="errorVote"></div>
+        </form>
+        
+        <div class="footer">
+          Suara Anda akan langsung tercatat di sistem resmi.
+        </div>
+      `;
+
+      document.getElementById("voteForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const kandidat = document.getElementById("kandidat").value;
+        const errorDiv = document.getElementById("errorVote");
+        errorDiv.textContent = "";
+
+        if (!kandidat) {
+          errorDiv.textContent = "⚠️ Pilih kandidat terlebih dahulu.";
+          return;
+        }
+
+        showModal(kandidat, async () => {
+          const btn = document.getElementById("voteBtn");
+          btn.disabled = true;
+          btn.innerHTML = '<span class="spinner"></span> Mengirim...';
+
+          try {
+            const response = await fetch(BACKEND_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: new URLSearchParams({
+                action: 'submit',
+                nim: nim,
+                nama: nama,
+                kandidat: kandidat
+              })
+            });
+
+            const result = await response.json();
+
+            if (result.status === "OK") {
+              localStorage.setItem("voted_feb_unri_2025", "true");
+              renderThankYou();
+            } else if (result.error === "NOT_ELIGIBLE") {
+              btn.disabled = false;
+              btn.textContent = "Kirim Suara";
+              errorDiv.textContent = "❌ Anda sudah pernah voting atau data tidak valid.";
+            } else {
+              btn.disabled = false;
+              btn.textContent = "Kirim Suara";
+              errorDiv.textContent = "⚠️ Error: " + (result.error || "Tidak diketahui");
+            }
+          } catch (err) {
+            btn.disabled = false;
+            btn.textContent = "Kirim Suara";
+            errorDiv.textContent = "⚠️ Gagal mengirim: Periksa koneksi.";
+          }
+        });
+      });
+    };
+
+    // Render halaman terima kasih
+    const renderThankYou = () => {
+      document.getElementById("mainCard").innerHTML = `
+        <div class="success-icon">✅</div>
+        <div class="success">Suara Anda Telah Terdaftar</div>
+        <p>Terima kasih atas partisipasi Anda dalam PEMIRA FEB UNRI 2025.</p>
+        
+        <div class="footer">
+          Data voting tersimpan secara aman dan transparan.
+        </div>
+      `;
+    };
+
+    // Inisialisasi
+    if (localStorage.getItem("voted_feb_unri_2025") !== "true") {
+      renderVerification();
+    }
   </script>
 </body>
 </html>
