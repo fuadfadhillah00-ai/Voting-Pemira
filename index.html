@@ -9,14 +9,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #d32f2f;
-      --primary-dark: #b71c1c;
-      --success: #d32f2f;
+      --primary: #d32f2f;       /* Merah utama (partisipasi) */
+      --primary-dark: #b71c1c;  /* Merah gelap (hover, border aktif) */
+      --success: #d32f2f;       /* Gunakan merah juga untuk "sukses" (konsistensi tema) */
       --success-dark: #9e1b1b;
       --card-bg: rgba(255, 255, 255, 0.08);
       --candidate-bg: rgba(255, 255, 255, 0.12);
-      --text-light: #ffffff;
-      --text-dark: #1a1a1a;
+      --text-light: #ffffff;    /* Teks terang */
+      --text-dark: #1a1a1a;     /* Teks gelap */
       --border-color: rgba(255, 255, 255, 0.2);
     }
 
@@ -28,6 +28,7 @@
 
     body {
       font-family: "Poppins", "Segoe UI", sans-serif;
+      /* Background: merah gelap ke hitam (serius, berwibawa) */
       background: linear-gradient(135deg, #b71c1c, #880e0e, #1a1a1a);
       color: var(--text-light);
       display: flex;
@@ -151,7 +152,7 @@
     }
 
     .success {
-      color: #ffffff;
+      color: #ffffff
       font-size: 25px;
       font-weight: 600;
       margin: 24px 0 16px;
@@ -170,6 +171,7 @@
       font-weight: 500;
     }
 
+    /* Modal Konfirmasi */
     .modal {
       display: none;
       position: fixed;
@@ -222,11 +224,22 @@
       font-size: 15px;
     }
 
-    .btn-cancel { background: #f5f5f5; color: #666; }
-    .btn-confirm { background: var(--primary); color: white; }
-    .btn-cancel:hover { background: #e0e0e0; }
-    .btn-confirm:hover { background: var(--primary-dark); }
+    .btn-cancel { 
+      background: #f5f5f5; 
+      color: #666; 
+    }
+    .btn-confirm { 
+      background: var(--primary); 
+      color: white; 
+    }
+    .btn-cancel:hover { 
+      background: #e0e0e0; 
+    }
+    .btn-confirm:hover { 
+      background: var(--primary-dark); 
+    }
 
+    /* ——— CARD KANDIDAT ——— */
     .candidates {
       margin: 24px 0;
       display: grid;
@@ -243,6 +256,7 @@
       border: 2px solid transparent;
       display: flex;
       flex-direction: column;
+      /* Border bawah halus untuk depth */
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
 
@@ -254,7 +268,9 @@
     .candidate-card.selected {
       border-color: var(--primary);
       background: rgba(211, 47, 47, 0.08);
-      box-shadow: 0 0 0 2px var(--primary), 0 6px 16px rgba(211, 47, 47, 0.2);
+      box-shadow: 
+        0 0 0 2px var(--primary),
+        0 6px 16px rgba(211, 47, 47, 0.2);
     }
 
     .candidate-photo {
@@ -274,7 +290,7 @@
       font-weight: 700;
       color: #ffffff;
       margin-bottom: 6px;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3); /* opsional: tambah kedalaman agar jelas di foto gelap */
     }
 
     .candidate-name {
@@ -304,7 +320,9 @@
   </style>
 </head>
 <body>
-  <div class="card" id="mainCard"></div>
+  <div class="card" id="mainCard">
+    <!-- Diisi oleh JS -->
+  </div>
 
   <div class="modal" id="confirmModal">
     <div class="modal-content">
@@ -322,8 +340,7 @@
   </div>
 
   <script>
-    // 🔴 GANTI DENGAN URL DEPLOY TERBARU DARI APPS SCRIPT
-    const BACKEND_URL = "https://script.google.com/macros/s/AKfycbz3CnYeuiKmiWfif0w_Ztn_MD1rm1utzUyx0Crp6HzXzy0Y01GgkZEas7u3XecQd7mWbQ/exec";
+    const BACKEND_URL = "https://script.google.com/macros/s/AKfycbxY92cAYx9b2WVtuncpM9ZxHpodapV6uUUySgRwMsN2cO7kVhCkbN1ERgE9_9Y7j7icRA/exec";
     let currentPage = "verify";
 
     function showModal(kandidat, onConfirm) {
@@ -360,12 +377,11 @@
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: new URLSearchParams({ action: 'get_candidates' })
         });
-        const text = await response.text();
-        const result = JSON.parse(text); // ← tetap pakai JSON.parse
+        const result = await response.json();
         if (result.success) {
           return result.candidates;
         } else {
-          throw new Error(result.message || "Gagal memuat kandidat");
+          throw new Error(result.error || "Gagal memuat kandidat");
         }
       } catch (err) {
         console.error("fetchCandidates error:", err);
@@ -381,7 +397,7 @@
         <p>Masukkan NIM dan nama sesuai data terdaftar.</p>
         
         <form id="verifyForm">
-          <input type="text" id="nim" placeholder="NIM" required autocomplete="off">
+          <input type="text" id="nim" placeholder="NIM (10 digit)" required autocomplete="off">
           <input type="text" id="nama" placeholder="Nama Lengkap" required autocomplete="name">
           <button type="submit" id="verifyBtn">Verifikasi</button>
           <div class="error" id="errorVerify"></div>
@@ -406,6 +422,11 @@
           return;
         }
 
+        if (!/^\d{10}$/.test(nim)) {
+          errorDiv.textContent = "⚠️ NIM harus 10 digit angka.";
+          return;
+        }
+
         btn.disabled = true;
         btn.innerHTML = '<span class="spinner"></span> Memverifikasi...';
 
@@ -419,23 +440,21 @@
               nama: nama
             })
           });
-          const text = await response.text();
-          const result = JSON.parse(text);
+
+          const result = await response.json();
 
           if (result.valid) {
             renderVoting(nim, nama);
           } else {
             btn.disabled = false;
             btn.textContent = "Verifikasi";
-            const isErrorType = result.error === "SUDAH_VOTE" || result.error === "BELUM_DIIZINKAN";
-            errorDiv.className = isErrorType ? "warning" : "error";
-            errorDiv.innerHTML = `<strong>${isErrorType ? "⚠️" : "❌"}</strong> ${result.message}`;
+            errorDiv.className = result.error === "SUDAH_VOTE" ? "warning" : "error";
+            errorDiv.innerHTML = `<strong>${result.error === "SUDAH_VOTE" ? "⚠️" : "❌"}</strong> ${result.message}`;
           }
         } catch (err) {
-          console.error("Fetch error:", err);
           btn.disabled = false;
           btn.textContent = "Verifikasi";
-          errorDiv.textContent = "⚠️ Gagal koneksi. Periksa jaringan Anda.";
+          errorDiv.textContent = "⚠️ Gagal koneksi: Periksa jaringan Anda.";
         }
       });
     }
@@ -524,8 +543,8 @@
                 kandidat: displayText
               })
             });
-            const text = await response.text();
-            const result = JSON.parse(text);
+
+            const result = await response.json();
 
             if (result.status === "OK") {
               localStorage.setItem("voted_feb_unri_2025", "true");
@@ -533,15 +552,13 @@
             } else {
               voteBtn.disabled = false;
               voteBtn.textContent = "Kirim Suara";
-              const isErrorType = result.error === "SUDAH_VOTE" || result.error === "BELUM_DIIZINKAN";
-              errorDiv.className = isErrorType ? "warning" : "error";
-              errorDiv.innerHTML = `<strong>${isErrorType ? "⚠️" : "❌"}</strong> ${result.message}`;
+              errorDiv.className = result.error === "SUDAH_VOTE" ? "warning" : "error";
+              errorDiv.innerHTML = `<strong>${result.error === "SUDAH_VOTE" ? "⚠️" : "❌"}</strong> ${result.message}`;
             }
           } catch (err) {
-            console.error("Submit error:", err);
             voteBtn.disabled = false;
             voteBtn.textContent = "Kirim Suara";
-            errorDiv.textContent = "⚠️ Gagal mengirim. Periksa jaringan.";
+            errorDiv.textContent = "⚠️ Gagal mengirim: Periksa koneksi.";
           }
         });
       });
@@ -560,6 +577,7 @@
       `;
     }
 
+    // ——— INISIALISASI ———
     if (localStorage.getItem("voted_feb_unri_2025") === "true") {
       renderThankYou();
     } else {
