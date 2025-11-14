@@ -9,14 +9,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #d32f2f;       /* Merah utama (partisipasi) */
-      --primary-dark: #b71c1c;  /* Merah gelap (hover, border aktif) */
-      --success: #d32f2f;       /* Gunakan merah juga untuk "sukses" (konsistensi tema) */
+      --primary: #d32f2f;
+      --primary-dark: #b71c1c;
+      --success: #d32f2f;
       --success-dark: #9e1b1b;
       --card-bg: rgba(255, 255, 255, 0.08);
       --candidate-bg: rgba(255, 255, 255, 0.12);
-      --text-light: #ffffff;    /* Teks terang */
-      --text-dark: #1a1a1a;     /* Teks gelap */
+      --text-light: #ffffff;
+      --text-dark: #1a1a1a;
       --border-color: rgba(255, 255, 255, 0.2);
     }
 
@@ -28,7 +28,6 @@
 
     body {
       font-family: "Poppins", "Segoe UI", sans-serif;
-      /* Background: merah gelap ke hitam (serius, berwibawa) */
       background: linear-gradient(135deg, #b71c1c, #880e0e, #1a1a1a);
       color: var(--text-light);
       display: flex;
@@ -152,7 +151,7 @@
     }
 
     .success {
-      color: #ffffff
+      color: #ffffff;
       font-size: 25px;
       font-weight: 600;
       margin: 24px 0 16px;
@@ -171,7 +170,6 @@
       font-weight: 500;
     }
 
-    /* Modal Konfirmasi */
     .modal {
       display: none;
       position: fixed;
@@ -239,7 +237,6 @@
       background: var(--primary-dark); 
     }
 
-    /* ——— CARD KANDIDAT ——— */
     .candidates {
       margin: 24px 0;
       display: grid;
@@ -256,7 +253,6 @@
       border: 2px solid transparent;
       display: flex;
       flex-direction: column;
-      /* Border bawah halus untuk depth */
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
 
@@ -290,7 +286,7 @@
       font-weight: 700;
       color: #ffffff;
       margin-bottom: 6px;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.3); /* opsional: tambah kedalaman agar jelas di foto gelap */
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
 
     .candidate-name {
@@ -397,7 +393,7 @@
         <p>Masukkan NIM dan nama sesuai data terdaftar.</p>
         
         <form id="verifyForm">
-          <input type="text" id="nim" placeholder="NIM (10 digit)" required autocomplete="off">
+          <input type="text" id="nim" placeholder="NIM" required autocomplete="off">
           <input type="text" id="nama" placeholder="Nama Lengkap" required autocomplete="name">
           <button type="submit" id="verifyBtn">Verifikasi</button>
           <div class="error" id="errorVerify"></div>
@@ -422,10 +418,11 @@
           return;
         }
 
-        if (!/^\d{10}$/.test(nim)) {
-          errorDiv.textContent = "⚠️ NIM harus 10 digit angka.";
-          return;
-        }
+        // ✅ HAPUS validasi digit 10 — biarkan fleksibel
+        // if (!/^\d{10}$/.test(nim)) {
+        //   errorDiv.textContent = "⚠️ NIM harus 10 digit angka.";
+        //   return;
+        // }
 
         btn.disabled = true;
         btn.innerHTML = '<span class="spinner"></span> Memverifikasi...';
@@ -448,8 +445,10 @@
           } else {
             btn.disabled = false;
             btn.textContent = "Verifikasi";
-            errorDiv.className = result.error === "SUDAH_VOTE" ? "warning" : "error";
-            errorDiv.innerHTML = `<strong>${result.error === "SUDAH_VOTE" ? "⚠️" : "❌"}</strong> ${result.message}`;
+            // ✅ Gunakan class "warning" untuk BELUM_DIIZINKAN juga
+            const isErrorType = result.error === "SUDAH_VOTE" || result.error === "BELUM_DIIZINKAN";
+            errorDiv.className = isErrorType ? "warning" : "error";
+            errorDiv.innerHTML = `<strong>${isErrorType ? "⚠️" : "❌"}</strong> ${result.message}`;
           }
         } catch (err) {
           btn.disabled = false;
@@ -552,8 +551,9 @@
             } else {
               voteBtn.disabled = false;
               voteBtn.textContent = "Kirim Suara";
-              errorDiv.className = result.error === "SUDAH_VOTE" ? "warning" : "error";
-              errorDiv.innerHTML = `<strong>${result.error === "SUDAH_VOTE" ? "⚠️" : "❌"}</strong> ${result.message}`;
+              const isErrorType = result.error === "SUDAH_VOTE" || result.error === "BELUM_DIIZINKAN";
+              errorDiv.className = isErrorType ? "warning" : "error";
+              errorDiv.innerHTML = `<strong>${isErrorType ? "⚠️" : "❌"}</strong> ${result.message}`;
             }
           } catch (err) {
             voteBtn.disabled = false;
@@ -577,7 +577,6 @@
       `;
     }
 
-    // ——— INISIALISASI ———
     if (localStorage.getItem("voted_feb_unri_2025") === "true") {
       renderThankYou();
     } else {
