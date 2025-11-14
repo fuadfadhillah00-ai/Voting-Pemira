@@ -13,8 +13,9 @@
       --primary-dark: #b71c1c;
       --success: #d32f2f;
       --success-dark: #9e1b1b;
-      --card-bg: rgba(0, 0, 0, 0.08);
-      --candidate-bg: rgba(0, 0, 0, 0.05);
+      --card-bg: rgba(255, 255, 255, 0.92); /* putih transparan ringan */
+      --candidate-bg: #ffffff; /* putih non-transparan */
+      --candidate-gradient: linear-gradient(145deg, #ffffff, #f9f9f9, #f0f0f0); /* gradien lembut */
       --text-light: #ffffff;
       --text-dark: #1a1a1a;
       --border-color: rgba(0, 0, 0, 0.1);
@@ -28,8 +29,8 @@
 
     body {
       font-family: "Poppins", "Segoe UI", sans-serif;
-      background: linear-gradient(135deg, #ffffff, #f0f0f0, #e0e0e0);
-      color: var(--text-dark);
+      background: linear-gradient(135deg, #ffffff, #f5f5f5, #e6e6e6); /* gradien putih ke abu-abu muda */
+      color: var(--text-dark); /* teks utama hitam */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -43,7 +44,7 @@
       -webkit-backdrop-filter: blur(10px);
       padding: 32px;
       border-radius: 22px;
-      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.08);
       width: 100%;
       max-width: 560px;
       text-align: center;
@@ -56,7 +57,7 @@
       content: '';
       position: absolute;
       top: -50%; left: -50%; width: 200%; height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(0,0,0,0.05) 0%, transparent 70%);
       z-index: -1;
     }
 
@@ -65,13 +66,14 @@
       font-weight: 700;
       margin: 0 0 8px;
       letter-spacing: -0.8px;
+      color: var(--text-dark); /* hitam */
     }
 
     h2 {
       font-size: 24px;
       font-weight: 600;
       margin: 16px 0 24px;
-      color: #e0e0e0;
+      color: var(--text-dark); /* hitam */
     }
 
     input, button {
@@ -131,7 +133,7 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     .error {
-      color: #ff6b6b;
+      color: #d32f2f; /* merah */
       font-size: 15px;
       margin-top: 14px;
       min-height: 24px;
@@ -139,7 +141,7 @@
     }
 
     .warning {
-      color: #ffd166;
+      color: #ff9800; /* oranye */
       font-size: 15px;
       margin-top: 14px;
       min-height: 24px;
@@ -147,7 +149,7 @@
     }
 
     .success {
-      color: #ffffff;
+      color: var(--text-dark);
       font-size: 22px;
       font-weight: 700;
       margin: 28px 0 20px;
@@ -163,8 +165,9 @@
     .footer {
       margin-top: 28px;
       font-size: 13px;
-      color: rgba(255, 255, 255, 0.6);
+      color: var(--text-dark); /* hitam */
       font-weight: 500;
+      opacity: 0.85;
     }
 
     .modal {
@@ -172,7 +175,7 @@
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.6);
       z-index: 1000;
       justify-content: center;
       align-items: center;
@@ -186,7 +189,7 @@
       max-width: 400px;
       padding: 24px;
       text-align: center;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
       transform: scale(0.9);
       opacity: 0;
       transition: all 0.3s;
@@ -232,23 +235,23 @@
     }
 
     .candidate-card {
-      background: var(--candidate-bg);
+      background: var(--candidate-gradient); /* gradien putih */
       border-radius: 16px;
       overflow: hidden;
       cursor: pointer;
       transition: all 0.3s;
       border: 2px solid transparent;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     .candidate-card:hover {
       transform: translateY(-4px);
-      background: rgba(255, 255, 255, 0.18);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     }
 
     .candidate-card.selected {
       border-color: var(--primary);
-      background: rgba(211, 47, 47, 0.08);
+      background: linear-gradient(145deg, #fff0f0, #ffe0e0); /* gradien merah muda saat dipilih */
       box-shadow: 0 0 0 2px var(--primary), 0 6px 16px rgba(211, 47, 47, 0.2);
     }
 
@@ -257,7 +260,7 @@
       height: 140px;
       object-fit: cover;
       display: block;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     }
 
     .candidate-info {
@@ -267,9 +270,8 @@
     .candidate-number {
       font-size: 18px;
       font-weight: 700;
-      color: #ffffff;
+      color: var(--text-dark); /* hitam */
       margin-bottom: 6px;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
 
     .candidate-name {
@@ -277,14 +279,15 @@
       font-weight: 600;
       line-height: 1.4;
       word-break: break-word;
-      color: var(--text-light);
+      color: var(--text-dark); /* hitam */
     }
 
     .loading-candidates {
       grid-column: 1 / -1;
       padding: 24px;
-      color: rgba(255, 255, 255, 0.7);
+      color: var(--text-dark);
       font-size: 16px;
+      opacity: 0.7;
     }
 
     @media (max-width: 480px) {
@@ -315,8 +318,7 @@
   </div>
 
   <script>
-    // ✅ GANTI DENGAN WEB APP URL BARU SETELAH DEPLOY
-    const BACKEND_URL = "https://script.google.com/macros/s/AKfycbwfk1pp0QGDTGINkiFdQvKyoSg51Fib7xBFtWTd-NG-hWM-ChLowrqm3UgK2XieY7-3bw/exec";
+    const BACKEND_URL = "https://script.google.com/macros/s/AKfycbxY92cAYx9b2WVtuncpM9ZxHpodapV6uUUySgRwMsN2cO7kVhCkbN1ERgE9_9Y7j7icRA/exec";
     let currentPage = "verify";
 
     function showModal(kandidat, onConfirm) {
@@ -369,7 +371,7 @@
       currentPage = "verify";
       document.getElementById("mainCard").innerHTML = `
         <h1>🗳️ PEMIRA FEB UNRI 2025</h1>
-        <h2>Verifikasi Identitas Pemilih</h2>
+        <h2 style="color: var(--text-dark);">Verifikasi Identitas Pemilih</h2>
         <p>Masukkan NIM dan nama sesuai data terdaftar.</p>
         
         <form id="verifyForm">
@@ -396,7 +398,6 @@
           return;
         }
 
-        // ✅ HAPUS validasi 10 digit — fleksibel sesuai database
         btn.disabled = true;
         btn.innerHTML = '<span class="spinner"></span> Memverifikasi...';
 
@@ -418,7 +419,6 @@
           } else {
             btn.disabled = false;
             btn.textContent = "Verifikasi";
-            // ✅ Tampilkan pesan error utuh dari backend
             errorDiv.className = 
               result.error === "SUDAH_VOTE" ? "warning" : 
               result.error === "BELUM_DIIZINKAN" ? "warning" : 
@@ -437,7 +437,7 @@
       currentPage = "voting";
       document.getElementById("mainCard").innerHTML = `
         <h1>✅ Verifikasi Berhasil</h1>
-        <h2>${nama}</h2>
+        <h2 style="color: var(--text-dark);">${nama}</h2> <!-- nama pemilih warna hitam -->
         <p>NIM: <strong>${nim}</strong></p>
         <p>Pilih salah satu pasangan kandidat berikut:</p>
         
@@ -464,7 +464,7 @@
         return `
           <div class="candidate-card" data-id="${c.id}" data-paslon="${paslonName}">
             <img src="${c.foto}" alt="Kandidat ${c.id}" class="candidate-photo" 
-                 onerror="this.style.opacity='0.3'; this.parentElement.style.background='#333';">
+                 onerror="this.style.opacity='0.3'; this.parentElement.style.background='#f0f0f0';">
             <div class="candidate-info">
               <div class="candidate-number">Nomor ${c.id}</div>
               <div class="candidate-name">${paslonName}</div>
