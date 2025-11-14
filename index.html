@@ -9,14 +9,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #d32f2f;       /* Merah utama (partisipasi) */
-      --primary-dark: #b71c1c;  /* Merah gelap (hover, border aktif) */
-      --success: #d32f2f;       /* Gunakan merah juga untuk "sukses" (konsistensi tema) */
+      --primary: #d32f2f;
+      --primary-dark: #b71c1c;
+      --success: #d32f2f;
       --success-dark: #9e1b1b;
       --card-bg: rgba(255, 255, 255, 0.08);
       --candidate-bg: rgba(255, 255, 255, 0.12);
-      --text-light: #ffffff;    /* Teks terang */
-      --text-dark: #1a1a1a;     /* Teks gelap */
+      --text-light: #ffffff;
+      --text-dark: #1a1a1a;
       --border-color: rgba(255, 255, 255, 0.2);
     }
 
@@ -28,7 +28,6 @@
 
     body {
       font-family: "Poppins", "Segoe UI", sans-serif;
-      /* Background: merah gelap ke hitam (serius, berwibawa) */
       background: linear-gradient(135deg, #b71c1c, #880e0e, #1a1a1a);
       color: var(--text-light);
       display: flex;
@@ -44,9 +43,7 @@
       -webkit-backdrop-filter: blur(10px);
       padding: 32px;
       border-radius: 22px;
-      box-shadow: 
-        0 12px 36px rgba(0, 0, 0, 0.4),
-        0 4px 12px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.25);
       width: 100%;
       max-width: 560px;
       text-align: center;
@@ -96,9 +93,7 @@
 
     input:focus {
       outline: none;
-      box-shadow: 
-        0 0 0 3px rgba(211, 47, 47, 0.4),
-        0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.4), 0 4px 12px rgba(0, 0, 0, 0.15);
       transform: translateY(-2px);
     }
 
@@ -152,10 +147,11 @@
     }
 
     .success {
-      color: #ffffff
-      font-size: 25px;
-      font-weight: 600;
-      margin: 24px 0 16px;
+      color: #ffffff;
+      font-size: 22px;
+      font-weight: 700;
+      margin: 28px 0 20px;
+      letter-spacing: -0.5px;
     }
 
     .success-icon {
@@ -171,7 +167,6 @@
       font-weight: 500;
     }
 
-    /* Modal Konfirmasi */
     .modal {
       display: none;
       position: fixed;
@@ -224,22 +219,11 @@
       font-size: 15px;
     }
 
-    .btn-cancel { 
-      background: #f5f5f5; 
-      color: #666; 
-    }
-    .btn-confirm { 
-      background: var(--primary); 
-      color: white; 
-    }
-    .btn-cancel:hover { 
-      background: #e0e0e0; 
-    }
-    .btn-confirm:hover { 
-      background: var(--primary-dark); 
-    }
+    .btn-cancel { background: #f5f5f5; color: #666; }
+    .btn-confirm { background: var(--primary); color: white; }
+    .btn-cancel:hover { background: #e0e0e0; }
+    .btn-confirm:hover { background: var(--primary-dark); }
 
-    /* ——— CARD KANDIDAT ——— */
     .candidates {
       margin: 24px 0;
       display: grid;
@@ -254,9 +238,6 @@
       cursor: pointer;
       transition: all 0.3s;
       border: 2px solid transparent;
-      display: flex;
-      flex-direction: column;
-      /* Border bawah halus untuk depth */
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
 
@@ -268,9 +249,7 @@
     .candidate-card.selected {
       border-color: var(--primary);
       background: rgba(211, 47, 47, 0.08);
-      box-shadow: 
-        0 0 0 2px var(--primary),
-        0 6px 16px rgba(211, 47, 47, 0.2);
+      box-shadow: 0 0 0 2px var(--primary), 0 6px 16px rgba(211, 47, 47, 0.2);
     }
 
     .candidate-photo {
@@ -290,7 +269,7 @@
       font-weight: 700;
       color: #ffffff;
       margin-bottom: 6px;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.3); /* opsional: tambah kedalaman agar jelas di foto gelap */
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
 
     .candidate-name {
@@ -314,24 +293,20 @@
       h2 { font-size: 22px; }
       input, button { padding: 12px; }
       .candidate-photo { height: 130px; }
-      .candidate-number { font-size: 15px; }
+      .candidate-number { font-size: 17px; }
       .candidate-name { font-size: 14px; }
     }
   </style>
 </head>
 <body>
-  <div class="card" id="mainCard">
-    <!-- Diisi oleh JS -->
-  </div>
+  <div class="card" id="mainCard"></div>
 
   <div class="modal" id="confirmModal">
     <div class="modal-content">
       <h3>🗳️ Konfirmasi Pilihan</h3>
       <p>Anda memilih:</p>
       <p id="confirmKandidat" style="font-weight: 600; font-size: 18px; color: var(--primary-dark);">Kandidat X</p>
-      <p style="margin-top: 16px; font-size: 14px; color: #555;">
-        Suara tidak dapat diubah setelah dikirim.
-      </p>
+      <p style="margin-top: 16px; font-size: 14px; color: #555;">Suara tidak dapat diubah setelah dikirim.</p>
       <div class="modal-buttons">
         <button class="modal-btn btn-cancel" id="modalCancel">Batal</button>
         <button class="modal-btn btn-confirm" id="modalConfirm">Kirim Suara</button>
@@ -340,7 +315,8 @@
   </div>
 
   <script>
-    const BACKEND_URL = "https://script.google.com/macros/s/AKfycbyjWIGzBPE4IjEYLq_pHYSMnwjQSPRQ2quC8w_EKZll69zWj_e3btlZDuyChjjd4CzZjA/exec";
+    // ✅ GANTI DENGAN WEB APP URL BARU SETELAH DEPLOY
+    const BACKEND_URL = "https://script.google.com/macros/s/AKfycbxY92cAYx9b2WVtuncpM9ZxHpodapV6uUUySgRwMsN2cO7kVhCkbN1ERgE9_9Y7j7icRA/exec";
     let currentPage = "verify";
 
     function showModal(kandidat, onConfirm) {
@@ -397,15 +373,13 @@
         <p>Masukkan NIM dan nama sesuai data terdaftar.</p>
         
         <form id="verifyForm">
-          <input type="text" id="nim" placeholder="NIM (10 digit)" required autocomplete="off">
+          <input type="text" id="nim" placeholder="NIM" required autocomplete="off">
           <input type="text" id="nama" placeholder="Nama Lengkap" required autocomplete="name">
           <button type="submit" id="verifyBtn">Verifikasi</button>
           <div class="error" id="errorVerify"></div>
         </form>
         
-        <div class="footer">
-          Data diverifikasi dengan database resmi FEB UNRI.
-        </div>
+        <div class="footer">Data diverifikasi dengan database resmi FEB UNRI.</div>
       `;
 
       document.getElementById("verifyForm").addEventListener("submit", async (e) => {
@@ -422,11 +396,7 @@
           return;
         }
 
-        if (!/^\d{10}$/.test(nim)) {
-          errorDiv.textContent = "⚠️ NIM harus 10 digit angka.";
-          return;
-        }
-
+        // ✅ HAPUS validasi 10 digit — fleksibel sesuai database
         btn.disabled = true;
         btn.innerHTML = '<span class="spinner"></span> Memverifikasi...';
 
@@ -448,8 +418,12 @@
           } else {
             btn.disabled = false;
             btn.textContent = "Verifikasi";
-            errorDiv.className = result.error === "SUDAH_VOTE" ? "warning" : "error";
-            errorDiv.innerHTML = `<strong>${result.error === "SUDAH_VOTE" ? "⚠️" : "❌"}</strong> ${result.message}`;
+            // ✅ Tampilkan pesan error utuh dari backend
+            errorDiv.className = 
+              result.error === "SUDAH_VOTE" ? "warning" : 
+              result.error === "BELUM_DIIZINKAN" ? "warning" : 
+              "error";
+            errorDiv.innerHTML = `<strong>${result.error === "SUDAH_VOTE" || result.error === "BELUM_DIIZINKAN" ? "⚠️" : "❌"}</strong> ${result.message}`;
           }
         } catch (err) {
           btn.disabled = false;
@@ -468,17 +442,13 @@
         <p>Pilih salah satu pasangan kandidat berikut:</p>
         
         <div class="candidates" id="candidateGrid">
-          <div class="loading-candidates">
-            <span class="spinner"></span> Memuat daftar kandidat...
-          </div>
+          <div class="loading-candidates"><span class="spinner"></span> Memuat daftar kandidat...</div>
         </div>
         
         <button id="voteBtn" disabled>Kirim Suara</button>
         <div class="error" id="errorVote"></div>
         
-        <div class="footer">
-          Suara Anda akan langsung tercatat di sistem resmi.
-        </div>
+        <div class="footer">Suara Anda akan langsung tercatat di sistem resmi.</div>
       `;
 
       const candidates = await fetchCandidates();
@@ -552,8 +522,11 @@
             } else {
               voteBtn.disabled = false;
               voteBtn.textContent = "Kirim Suara";
-              errorDiv.className = result.error === "SUDAH_VOTE" ? "warning" : "error";
-              errorDiv.innerHTML = `<strong>${result.error === "SUDAH_VOTE" ? "⚠️" : "❌"}</strong> ${result.message}`;
+              errorDiv.className = 
+                result.error === "SUDAH_VOTE" ? "warning" : 
+                result.error === "TIDAK_AKTIF" ? "warning" : 
+                "error";
+              errorDiv.innerHTML = `<strong>${result.error === "SUDAH_VOTE" || result.error === "TIDAK_AKTIF" ? "⚠️" : "❌"}</strong> ${result.message}`;
             }
           } catch (err) {
             voteBtn.disabled = false;
@@ -570,14 +543,10 @@
         <div class="success-icon">✅</div>
         <div class="success">Suara Anda Telah Terdaftar</div>
         <p>Terima kasih atas partisipasi Anda dalam PEMIRA FEB UNRI 2025.</p>
-        
-        <div class="footer">
-          Data voting tersimpan secara aman dan transparan.
-        </div>
+        <div class="footer">Data voting tersimpan secara aman dan transparan.</div>
       `;
     }
 
-    // ——— INISIALISASI ———
     if (localStorage.getItem("voted_feb_unri_2025") === "true") {
       renderThankYou();
     } else {
