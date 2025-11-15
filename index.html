@@ -393,12 +393,19 @@
         `⏰ Voting ditutup dalam: <span class="countdown">${days}h ${hours}j ${minutes}m ${seconds}d</span>`;
     }
 
-    // ✅ Jalankan countdown hanya jika belum unlock
-    countdownInterval = setInterval(() => {
-      if (document.getElementById("countdownDisplay")) {
-        updateCountdown();
+    function startCountdown() {
+      // ✅ Hentikan interval lama jika ada
+      if (countdownInterval) {
+        clearInterval(countdownInterval);
       }
-    }, 1000);
+      // ✅ Jalankan interval baru
+      countdownInterval = setInterval(() => {
+        if (document.getElementById("countdownDisplay")) {
+          updateCountdown();
+        }
+      }, 1000);
+      updateCountdown(); // panggil sekali saat start
+    }
 
     function showModal(kandidat, onConfirm) {
       document.getElementById("confirmKandidat").textContent = kandidat;
@@ -549,7 +556,8 @@
         <div class="copyright">© PEMIRA FEB UNRI 2025</div>
       `;
 
-      setTimeout(updateCountdown, 50);
+      // ✅ Start countdown
+      startCountdown();
 
       const candidates = await fetchCandidates();
       const grid = document.getElementById("candidateGrid");
@@ -662,7 +670,8 @@
         <div class="copyright">© PEMIRA FEB UNRI 2025</div>
       `;
 
-      setTimeout(updateCountdown, 50);
+      // ✅ Start countdown
+      startCountdown();
 
       document.getElementById("submitFeedbackBtn").addEventListener("click", () => {
         const feedback = document.getElementById("feedback").value.trim();
@@ -713,7 +722,8 @@
         <div class="copyright">© PEMIRA FEB UNRI 2025</div>
       `;
 
-      setTimeout(updateCountdown, 50);
+      // ✅ Start countdown
+      startCountdown();
 
       document.getElementById("submitFeedbackBtn").addEventListener("click", () => {
         const feedback = document.getElementById("feedback").value.trim();
