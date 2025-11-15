@@ -382,8 +382,12 @@
         `⏰ Voting ditutup dalam: <span class="countdown">${days}h ${hours}j ${minutes}m ${seconds}d</span>`;
     }
 
-    setInterval(updateCountdown, 1000);
-    updateCountdown(); // panggil sekali saat load
+    // ✅ Jangan panggil updateCountdown() di awal — tunggu elemen dibuat
+    setInterval(() => {
+      if (document.getElementById("countdownDisplay")) {
+        updateCountdown();
+      }
+    }, 1000);
 
     function showModal(kandidat, onConfirm) {
       document.getElementById("confirmKandidat").textContent = kandidat;
@@ -454,6 +458,9 @@
         <div class="footer">Data diverifikasi dengan DPT FEB UNRI</div>
         <div class="copyright">© PEMIRA FEB UNRI 2025</div>
       `;
+
+      // ✅ Panggil updateCountdown setelah elemen dibuat
+      setTimeout(updateCountdown, 50);
 
       document.getElementById("verifyForm").addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -529,9 +536,8 @@
         <div class="copyright">© PEMIRA FEB UNRI 2025</div>
       `;
 
-      document.getElementById("countdownDisplay").innerHTML = 
-        `⏰ Voting ditutup dalam: <span class="countdown">Memuat...</span>`;
-      updateCountdown(); // update realtime
+      // ✅ Update countdown
+      setTimeout(updateCountdown, 50);
 
       const candidates = await fetchCandidates();
       const grid = document.getElementById("candidateGrid");
@@ -636,9 +642,8 @@
         <div class="copyright">© PEMIRA FEB UNRI 2025</div>
       `;
 
-      document.getElementById("countdownDisplay").innerHTML = 
-        `⏰ Voting ditutup dalam: <span class="countdown">Memuat...</span>`;
-      updateCountdown(); // update realtime
+      // ✅ Update countdown
+      setTimeout(updateCountdown, 50);
     }
 
     if (localStorage.getItem("voted_feb_unri_2025") === "true") {
