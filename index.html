@@ -462,7 +462,7 @@
       }
       document.getElementById("mainCard").innerHTML = `
         <div class="countdown-container">
-          <div id="countdownDisplay">Voting Dibuka Kembali</div>
+          <div id="countdownDisplay">Memuat...</div>
         </div>
         <div class="header-container">
           <img src="https://i.imgur.com/T488a7A.png" alt="Logo PEMIRA" class="logo">
@@ -481,6 +481,9 @@
         <div class="footer">Data diverifikasi dengan DPT FEB UNRI</div>
         <div class="copyright">© PEMIRA FEB UNRI 2025</div>
       `;
+
+      // ✅ Start countdown
+      startCountdown();
 
       document.getElementById("verifyForm").addEventListener("submit", async (e) => {
         e.preventDefault();
