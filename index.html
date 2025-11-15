@@ -670,7 +670,8 @@
 
         if (feedback === UNLOCK_CODE) {
           errorDiv.textContent = "";
-          localStorage.removeItem("voted_feb_unri_2025"); // hapus status voted
+          // ✅ Hapus status voted agar bisa kembali ke verifikasi
+          localStorage.removeItem("voted_feb_unri_2025");
           renderVerification();
           return;
         }
@@ -720,6 +721,7 @@
 
         if (feedback === UNLOCK_CODE) {
           errorDiv.textContent = "";
+          // ✅ Hapus status voted agar bisa kembali ke verifikasi
           localStorage.removeItem("voted_feb_unri_2025");
           renderVerification();
           return;
