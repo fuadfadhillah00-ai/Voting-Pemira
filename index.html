@@ -60,6 +60,23 @@
       z-index: -1;
     }
 
+    .countdown-container {
+      margin-bottom: 20px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .countdown {
+      font-size: 18px;
+      color: #d32f2f;
+      font-weight: 700;
+    }
+
     .header-container {
       display: flex;
       align-items: center;
@@ -344,6 +361,30 @@
     const BACKEND_URL = "https://script.google.com/macros/s/AKfycbwfk1pp0QGDTGINkiFdQvKyoSg51Fib7xBFtWTd-NG-hWM-ChLowrqm3UgK2XieY7-3bw/exec";
     let currentPage = "verify";
 
+    // ✅ Countdown Timer
+    const targetDate = new Date("2025-12-05T15:00:00+07:00"); // 5 Desember 2025, 15:00 WIB
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = targetDate - now;
+
+      if (diff <= 0) {
+        document.getElementById("countdownDisplay").innerHTML = '<span style="color: #d32f2f;">⚠️ Waktu voting telah berakhir</span>';
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      document.getElementById("countdownDisplay").innerHTML = 
+        `⏰ Voting ditutup dalam: <span class="countdown">${days}h ${hours}j ${minutes}m ${seconds}d</span>`;
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown(); // panggil sekali saat load
+
     function showModal(kandidat, onConfirm) {
       document.getElementById("confirmKandidat").textContent = kandidat;
       const modal = document.getElementById("confirmModal");
@@ -393,6 +434,9 @@
     function renderVerification() {
       currentPage = "verify";
       document.getElementById("mainCard").innerHTML = `
+        <div class="countdown-container">
+          <div id="countdownDisplay">Memuat...</div>
+        </div>
         <div class="header-container">
           <img src="https://i.imgur.com/T488a7A.png" alt="Logo PEMIRA" class="logo">
           <h1 class="title-text">PEMIRA FEB UNRI 2025</h1>
@@ -463,6 +507,9 @@
     async function renderVoting(nim, nama) {
       currentPage = "voting";
       document.getElementById("mainCard").innerHTML = `
+        <div class="countdown-container">
+          <div id="countdownDisplay">Memuat...</div>
+        </div>
         <div class="header-container">
           <img src="https://i.imgur.com/T488a7A.png" alt="Logo PEMIRA" class="logo">
           <h1 class="title-text">PEMIRA FEB UNRI 2025</h1>
@@ -481,6 +528,10 @@
         <div class="footer">Suara Anda akan langsung tercatat di sistem resmi.</div>
         <div class="copyright">© PEMIRA FEB UNRI 2025</div>
       `;
+
+      document.getElementById("countdownDisplay").innerHTML = 
+        `⏰ Voting ditutup dalam: <span class="countdown">Memuat...</span>`;
+      updateCountdown(); // update realtime
 
       const candidates = await fetchCandidates();
       const grid = document.getElementById("candidateGrid");
@@ -571,6 +622,9 @@
     function renderThankYou() {
       currentPage = "thankyou";
       document.getElementById("mainCard").innerHTML = `
+        <div class="countdown-container">
+          <div id="countdownDisplay">Memuat...</div>
+        </div>
         <div class="header-container">
           <img src="https://i.imgur.com/T488a7A.png" alt="Logo PEMIRA" class="logo">
           <h1 class="title-text">PEMIRA FEB UNRI 2025</h1>
@@ -581,6 +635,10 @@
         <div class="footer">Data voting tersimpan secara aman dan transparan.</div>
         <div class="copyright">© PEMIRA FEB UNRI 2025</div>
       `;
+
+      document.getElementById("countdownDisplay").innerHTML = 
+        `⏰ Voting ditutup dalam: <span class="countdown">Memuat...</span>`;
+      updateCountdown(); // update realtime
     }
 
     if (localStorage.getItem("voted_feb_unri_2025") === "true") {
